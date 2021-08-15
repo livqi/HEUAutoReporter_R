@@ -63,7 +63,7 @@ for a in range(len(stu)):
             print("已登录账号："+re.search('(B|S|[0-9])(Z|[0-9])[0-9]{8}(?=%)',p.request.headers["Cookie"]).group(0))
         else:
             print(stulist[a]["STUID"]+stulist[a]["PASSWORD"]+"登录失败")
-            push_text+=stulist[a]["STUID"]+"登录失败，账号密码已经输出，请到Github Actions执行界面查看\n"
+            push_text+=stulist[a]["STUID"]+"登录失败，账号密码已经输出，请到Github Actions执行界面查看\n\n"
             break
         headers["Cookie"]+=p.request.headers["Cookie"]
         #print("Cookie已更新为"+headers["Cookie"])
@@ -224,15 +224,15 @@ for a in range(len(stu)):
         if result["errno"]==0:
             #报备成功
             push_text+=stulist[a]["STUID"]+"报备成功，报备时间为"+datetime.datetime.fromtimestamp(fieldLYyc1+120).strftime("%Y-%m-%d %H:%M:%S")+\
-                datetime.datetime.fromtimestamp(fieldBBcxrqFrom).strftime("%Y-%m-%d")+"22:00:00"+"表单地址："+formAddress+"\n"
+                datetime.datetime.fromtimestamp(fieldBBcxrqFrom).strftime("%Y-%m-%d")+"22:00:00"+"表单地址："+formAddress+"\n\n"
             pass
         else :
             #报备失败
-            push_text+=stulist[a]["STUID"]+"报备失败，返回结果为"+str(result)+"表单地址："+formAddress+"\n"
+            push_text+=stulist[a]["STUID"]+"报备失败，返回结果为"+str(result)+"表单地址："+formAddress+"\n\n"
             pass
     except Exception as e:
         print(stulist[a]["STUID"]+"报备失败，程序可能出错了："+str(e))
-        push_text+=stulist[a]["STUID"]+"报备失败，有可能是程序出错了："+str(e)+"\n"
+        push_text+=stulist[a]["STUID"]+"报备失败，有可能是程序出错了："+str(e)+"\n\n"
         pass
 if SCKEY != '':#server酱推送
     payload = {'title': "HEU自动报备_R", 'desp': push_text}
