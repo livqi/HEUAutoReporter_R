@@ -135,7 +135,7 @@ for a in range(len(stu)):
                "groupQTLList":[0],
                "groupZZLList":[0],
                "fieldJBsqr":stulist[a]["STUID"],
-               "fieldJBsqr_Name":"吕东翼",#申请人
+               "fieldJBsqr_Name":str(idontknowwhatsthis["_VAR_OWNER_REALNAME"]),#申请人
                "fieldJBszxy":"12000",
                "fieldJBszxy_Name":"软件学院",
                "fieldJBxh":stulist[a]["STUID"],
