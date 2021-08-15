@@ -95,7 +95,7 @@ for a in range(len(stu)):
         req.headers['Referer']=formAddress
         idontknowwhatsthis=json.loads(req.post("https://one.wvpn.hrbeu.edu.cn/infoplus/interface/render",data=body,proxies=proxies,verify=False).text)["entities"][0]["data"]
         #我也不知道这是啥东西，反正就是返回了好长一坨信息，还把我的自动缩进卡死了...不过这些信息下面正好可以用到。
-        #print(idontknowwhatsthis)
+        print(idontknowwhatsthis)
         fieldLYyc1=datetime.datetime.now().timestamp()#获取现在的时间
         fieldBBcxrqFrom=datetime.datetime.strptime(str(datetime.date.today()),"%Y-%m-%d").timestamp()#获取今天0点的时间
         fieldBBcxrqTo=fieldBBcxrqFrom
