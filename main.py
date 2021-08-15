@@ -6,12 +6,22 @@ proxies={
         "https":None
     }
 stulist= {}
-stu=os.environ['STULIST'].strip("#").split('#')
-SCKEY=os.environ['SCKEY']
+try:
+    stu=os.environ['STULIST'].strip("#").split('#')
+    SCKEY=os.environ['SCKEY']
+except Exception as e:
+    print(e)
+    print("读取环境变量失败，宁是否正确设置了Secrets？")
+    exit()
 for a in range(len(stu)):
-    stulist[a]={}
-    stulist[a]['STUID']=stu[a].split(" ")[0]
-    stulist[a]['PASSWORD']=stu[a].split(" ")[1]
+    try:
+        stulist[a]={}
+        stulist[a]['STUID']=stu[a].split(" ")[0]
+        stulist[a]['PASSWORD']=stu[a].split(" ")[1]
+    except Exception as e:
+        print(e)
+        print("分割账号密码失败，宁的Secrets格式确实不对")
+        exit()
     try:
         xiegang="\\"
         requests.packages.urllib3.disable_warnings()
