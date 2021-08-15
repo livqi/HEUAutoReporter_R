@@ -6,8 +6,13 @@ proxies={
         "https":None
     }
 stulist= {}
-stu=os.environ['STULIST'].strip("#").split('#')
-SCKEY=os.environ['SCKEY']
+try:
+    stu=os.environ['STULIST'].strip("#").split('#')
+    SCKEY=os.environ['SCKEY']
+except Exception as e:
+    print(e)
+    print("读取环境变量失败，宁是否正确设置了Secrets？")
+    exit()
 for a in range(len(stu)):
     stulist[a]={}
     stulist[a]['STUID']=stu[a].split(" ")[0]
