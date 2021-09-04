@@ -238,7 +238,7 @@ for a in range(len(stu)):
             pass
     except Exception as e:
         print(stulist[a]["STUID"]+"报备失败，程序可能出错了："+str(e))
-        desp_md+="\n|"+stulist[a]["STUID"]+"|"+"失败，有可能是程序出错了："+"|"+str(e)+"|"+"|"
+        desp_md+="\n|"+stulist[a]["STUID"]+"|"+"失败，有可能是程序出错了"+"|"+str(e)+"|"+"|"
         push_text+=stulist[a]["STUID"]+"报备失败，有可能是程序出错了："+str(e)+"\n\n"
         pass
 if SCKEY != '':#server酱推送
