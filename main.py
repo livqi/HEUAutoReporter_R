@@ -98,7 +98,7 @@ for a in range(len(stu)):
         req.headers['Referer']=formAddress
         idontknowwhatsthis=json.loads(req.post("https://one.wvpn.hrbeu.edu.cn/infoplus/interface/render",data=body,proxies=proxies,verify=False).text)["entities"][0]["data"]
         #我也不知道这是啥东西，反正就是返回了好长一坨信息，还把我的自动缩进卡死了...不过这些信息下面正好可以用到。
-        #print(idontknowwhatsthis)
+        print(idontknowwhatsthis)
         fieldLYyc1=datetime.datetime.now().timestamp()#获取现在的时间
         fieldBBcxrqFrom=datetime.datetime.strptime(str(datetime.date.today()),"%Y-%m-%d").timestamp()#获取今天0点的时间
         fieldBBcxrqTo=fieldBBcxrqFrom
@@ -149,14 +149,14 @@ for a in range(len(stu)):
                "groupZZLList":[0],
                "fieldJBsqr":stulist[a]["STUID"],
                "fieldJBsqr_Name":str(idontknowwhatsthis["_VAR_OWNER_REALNAME"]),#申请人
-               "fieldJBszxy":"12000",
-               "fieldJBszxy_Name":"软件学院",
+               "fieldJBszxy":str(idontknowwhatsthis["_VAR_OWNER_ORGANIZES_Codes"]),#专业代号，软件工程是12000
+               "fieldJBszxy_Name":str(idontknowwhatsthis["_VAR_OWNER_ORGANIZES_Names"]),#专业名称，软件工程是软件工程
                "fieldJBxh":stulist[a]["STUID"],
                "fieldJBlxfs":"17777777777",#申请人电话
                "fieldJBszgy":"十公寓",#所在公寓
                "fieldJBfdyxm":"0600010269",#导员账号
                "fieldJBfdyxm_Name":"王蕾",
-               "fieldJBfdylxdh":"17777777777",#导员电话
+               "fieldJBfdylxdh":"17777775492",#导员电话
                "fieldJBjcxlx":"1",#1是报备:-)2是审批
                "fieldBBh1":"1",#这是个啥？？？
                "fieldBByc1":"",
