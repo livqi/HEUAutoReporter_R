@@ -6,6 +6,9 @@ proxies={
         "https":None
     }
 stulist= {}
+desp_md='''
+| 账号       | 报备结果 | 返回信息 | 表单地址 |
+| ---------- | -------- | -------- | -------- |'''
 try:
     stu=os.environ['STULIST'].strip("#").split('#')
     SCKEY=os.environ['SCKEY']
@@ -223,17 +226,22 @@ for a in range(len(stu)):
         print(result)
         if result["errno"]==0:
             #报备成功
+            desp_md+="\n|"+stulist[a]["STUID"]+"|"+"成功:"+datetime.datetime.fromtimestamp(fieldLYyc1+120).strftime("%Y-%m-%d %H:%M:%S")+\
+                datetime.datetime.fromtimestamp(fieldBBcxrqFrom).strftime("%Y-%m-%d")+"22:00:00"+"|"+str(result)+"|"+formAddress+"|"
             push_text+=stulist[a]["STUID"]+"报备成功，报备时间为"+datetime.datetime.fromtimestamp(fieldLYyc1+120).strftime("%Y-%m-%d %H:%M:%S")+\
                 datetime.datetime.fromtimestamp(fieldBBcxrqFrom).strftime("%Y-%m-%d")+"22:00:00"+"表单地址："+formAddress+"\n\n"
             pass
         else :
             #报备失败
+            desp_md+="\n|"+stulist[a]["STUID"]+"|"+"失败"+"|"+str(result)+"|"+formAddress+"|"
             push_text+=stulist[a]["STUID"]+"报备失败，返回结果为"+str(result)+"表单地址："+formAddress+"\n\n"
             pass
     except Exception as e:
         print(stulist[a]["STUID"]+"报备失败，程序可能出错了："+str(e))
+        desp_md+="\n|"+stulist[a]["STUID"]+"|"+"失败，有可能是程序出错了："+"|"+str(e)+"|"+"|"
         push_text+=stulist[a]["STUID"]+"报备失败，有可能是程序出错了："+str(e)+"\n\n"
         pass
 if SCKEY != '':#server酱推送
-    payload = {'title': "HEU自动报备_R", 'desp': push_text}
+    payload = {'title': "HEU自动报备_R", 'desp': desp_md}
     requests.get("https://sctapi.ftqq.com/" + SCKEY + ".send", params=payload)
+
