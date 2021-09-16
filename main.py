@@ -6,6 +6,7 @@ proxies={
         "https":None
     }
 stulist= {}
+retry=[]
 desp_md='''
 | 账号       | 报备结果 | 返回信息 | 表单地址 |
 | ---------- | -------- | -------- | -------- |'''
@@ -16,7 +17,10 @@ except Exception as e:
     print(e)
     print("读取环境变量失败，宁是否正确设置了Secrets？")
     exit()
-for a in range(len(stu)):
+a=-1
+while a <len(stu)-1:
+    a+=1
+    print("==========开始登录第" + str(a + 1) + "个账号==========")
     try:
         stulist[a]={}
         stulist[a]['STUID']=stu[a].split(" ")[0]
@@ -24,7 +28,7 @@ for a in range(len(stu)):
     except Exception as e:
         print(e)
         print("分割账号密码失败，宁的Secrets格式确实不对")
-        exit()
+        continue
     try:
         xiegang="\\"
         requests.packages.urllib3.disable_warnings()
@@ -57,7 +61,7 @@ for a in range(len(stu)):
         body["lt"]=lt[0]
         body["source"]=logintype[0]
         body["execution"]=execution[0]
-        print("==========开始登录第" + str(a + 1) + "个账号==========")
+
         q=req.post("https://cas-443.wvpn.hrbeu.edu.cn/cas/login",proxies=proxies,data=body,headers=headers,verify=False)
 
         headers["Cookie"]+=q.headers["Set-Cookie"].split(";")[9].split(" ")[1]+";"#添加Cookie：CASTGC
@@ -66,8 +70,12 @@ for a in range(len(stu)):
             print("已登录账号："+re.search('(B|S|[0-9])(Z|[0-9])[0-9]{8}(?=%)',p.request.headers["Cookie"]).group(0))
         else:
             print(stulist[a]["STUID"]+stulist[a]["PASSWORD"]+"登录失败")
+            desp_md += "\n|" + stulist[a]["STUID"] + "|" + "失败" + "|" + "登录失败，账号密码已经输出，请到Github Actions执行界面查看" + "|"  + "|"
             push_text+=stulist[a]["STUID"]+"登录失败，账号密码已经输出，请到Github Actions执行界面查看\n\n"
-            break
+            if stulist[a]["STUID"] not in retry:
+                retry.append(stulist[a]["STUID"])
+                a-=1
+            continue
         headers["Cookie"]+=p.request.headers["Cookie"]
         #print("Cookie已更新为"+headers["Cookie"])
         q=req.get("https://one.wvpn.hrbeu.edu.cn/infoplus/form/JCXBBJSP/start",proxies=proxies,verify=False)#开始创建流程
@@ -85,7 +93,11 @@ for a in range(len(stu)):
             #print(info)
         else:
             print("表单创建失败"+str(info))
-            break
+            if stulist[a]["STUID"] not in retry:
+                retry.append(stulist[a]["STUID"])
+                a -= 1
+
+            continue
         formhtml=req.get(formAddress,proxies=proxies,verify=False).text#打开表单
         stedId=re.search("[0-9]{7};", formhtml).group(0)[:-1]
 
@@ -240,6 +252,9 @@ for a in range(len(stu)):
         print(stulist[a]["STUID"]+"报备失败，程序可能出错了："+str(e))
         desp_md+="\n|"+stulist[a]["STUID"]+"|"+"失败"+"|"+str(e)+"|"+"|"
         push_text+=stulist[a]["STUID"]+"报备失败，有可能是程序出错了："+str(e)+"\n\n"
+        if stulist[a]["STUID"] not in retry:
+            retry.append(stulist[a]["STUID"])
+            a-=1
         pass
 if SCKEY != '':#server酱推送
     payload = {'title': "HEU自动报备_R", 'desp': desp_md}
