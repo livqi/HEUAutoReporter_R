@@ -248,6 +248,10 @@ while a <len(stu)-1:
             desp_md+="\n|"+stulist[a]["STUID"]+"|"+"失败"+"|"+str(result)+"|"+formAddress+"|"
             push_text+=stulist[a]["STUID"]+"报备失败，返回结果为"+str(result)+"表单地址："+formAddress+"\n\n"
             pass
+    except IndexError as te:
+        print(stulist[a]["STUID"]+"报备失败，获取账号信息失败(IndexError)")
+        desp_md += "\n|" + stulist[a]["STUID"] + "|" + "失败" + "|" + "获取账号信息失败(IndexError)" + "|" + "|"
+        push_text += stulist[a]["STUID"] + "报备失败，获取账号信息失败(IndexError)：" + str(te) + "\n\n"
     except Exception as e:
         print(stulist[a]["STUID"]+"报备失败，程序可能出错了："+str(e))
         desp_md+="\n|"+stulist[a]["STUID"]+"|"+"失败"+"|"+str(e)+"|"+"|"
