@@ -1,6 +1,6 @@
 import requests,re,json,datetime,os
 from lxml import etree
-push_text=""
+desp_text=""
 proxies={
         "http":None,
         "https":None
@@ -63,15 +63,20 @@ while a <len(stu)-1:
         body["execution"]=execution[0]
 
         q=req.post("https://cas-443.wvpn.hrbeu.edu.cn/cas/login",proxies=proxies,data=body,headers=headers,verify=False)
-
+        if str(q.headers).find("CASTGC")==-1:#未登录成功则输出信息并尝试下一个账号
+            print(stulist[a]["STUID"] + " "+stulist[a]["PASSWORD"] + "登录失败")
+            desp_md += "\n|" + stulist[a][
+                "STUID"] + "|" + "失败" + "|" + "登录失败，账号密码已经输出，请到Github Actions执行界面查看" + "|" + "|"
+            desp_text += stulist[a]["STUID"] + "登录失败，账号密码已经输出，请到Github Actions执行界面查看\n\n"
+            continue
         headers["Cookie"]+=q.headers["Set-Cookie"].split(";")[9].split(" ")[1]+";"#添加Cookie：CASTGC
         p=req.get("https://wvpn.hrbeu.edu.cn/users/sign_in")#获取_webvpn_key和webvpn_username，_astraeus_session
         if re.search('(B|S|[0-9])(Z|[0-9])[0-9]{8}%', p.request.headers["Cookie"]):#这里匹配的学号是webvpn_username的
             print("已登录账号："+re.search('(B|S|[0-9])(Z|[0-9])[0-9]{8}(?=%)',p.request.headers["Cookie"]).group(0))
         else:
-            print(stulist[a]["STUID"]+stulist[a]["PASSWORD"]+"登录失败")
-            desp_md += "\n|" + stulist[a]["STUID"] + "|" + "失败" + "|" + "登录失败，账号密码已经输出，请到Github Actions执行界面查看" + "|"  + "|"
-            push_text+=stulist[a]["STUID"]+"登录失败，账号密码已经输出，请到Github Actions执行界面查看\n\n"
+            print(stulist[a]["STUID"]+stulist[a]["PASSWORD"]+"获取webvpn账密失败")
+            desp_md += "\n|" + stulist[a]["STUID"] + "|" + "失败" + "|" + "获取webvpn账密失败" + "|"  + "|"
+            desp_text+=stulist[a]["STUID"]+"获取webvpn账密失败\n\n"
             if stulist[a]["STUID"] not in retry:
                 retry.append(stulist[a]["STUID"])
                 a-=1
@@ -96,7 +101,6 @@ while a <len(stu)-1:
             if stulist[a]["STUID"] not in retry:
                 retry.append(stulist[a]["STUID"])
                 a -= 1
-
             continue
         formhtml=req.get(formAddress,proxies=proxies,verify=False).text#打开表单
         stedId=re.search("[0-9]{7};", formhtml).group(0)[:-1]
@@ -240,27 +244,23 @@ while a <len(stu)-1:
             #报备成功
             desp_md+="\n|"+stulist[a]["STUID"]+"|"+"成功"+"|报备时间："+datetime.datetime.fromtimestamp(fieldLYyc1+120).strftime("%Y-%m-%d %H:%M:%S")+\
                 datetime.datetime.fromtimestamp(fieldBBcxrqFrom).strftime("%Y-%m-%d")+"22:00:00"+"    报备结果："+str(result)+"|"+formAddress+"|"
-            push_text+=stulist[a]["STUID"]+"报备成功，报备时间为"+datetime.datetime.fromtimestamp(fieldLYyc1+120).strftime("%Y-%m-%d %H:%M:%S")+\
+            desp_text+=stulist[a]["STUID"]+"报备成功，报备时间为"+datetime.datetime.fromtimestamp(fieldLYyc1+120).strftime("%Y-%m-%d %H:%M:%S")+\
                 datetime.datetime.fromtimestamp(fieldBBcxrqFrom).strftime("%Y-%m-%d")+"22:00:00"+"表单地址："+formAddress+"\n\n"
             pass
         else :
             #报备失败
             desp_md+="\n|"+stulist[a]["STUID"]+"|"+"失败"+"|"+str(result)+"|"+formAddress+"|"
-            push_text+=stulist[a]["STUID"]+"报备失败，返回结果为"+str(result)+"表单地址："+formAddress+"\n\n"
+            desp_text+=stulist[a]["STUID"]+"报备失败，返回结果为"+str(result)+"表单地址："+formAddress+"\n\n"
             pass
-    except IndexError as te:
-        print(stulist[a]["STUID"]+"报备失败，获取账号信息失败(IndexError)")
-        desp_md += "\n|" + stulist[a]["STUID"] + "|" + "失败" + "|" + "获取账号信息失败(IndexError)" + "|" + "|"
-        push_text += stulist[a]["STUID"] + "报备失败，获取账号信息失败(IndexError)：" + str(te) + "\n\n"
     except Exception as e:
         print(stulist[a]["STUID"]+"报备失败，程序可能出错了："+str(e))
         desp_md+="\n|"+stulist[a]["STUID"]+"|"+"失败"+"|"+str(e)+"|"+"|"
-        push_text+=stulist[a]["STUID"]+"报备失败，有可能是程序出错了："+str(e)+"\n\n"
+        desp_text+=stulist[a]["STUID"]+"报备失败，有可能是程序出错了："+str(e)+"\n\n"
         if stulist[a]["STUID"] not in retry:
             retry.append(stulist[a]["STUID"])
             a-=1
         pass
 if SCKEY != '':#server酱推送
-    payload = {'title': "HEU自动报备_R", 'desp': desp_md}
+    payload = {'title': "HEU自动报备_R", 'desp': desp_md}#desp_md：表格形式，desp_text：文本形式
     requests.get("https://sctapi.ftqq.com/" + SCKEY + ".send", params=payload)
 
