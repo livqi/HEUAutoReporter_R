@@ -66,8 +66,13 @@ while a <len(stu)-1:
         if str(q.headers).find("CASTGC")==-1:#未登录成功则输出信息并尝试下一个账号
             print(stulist[a]["STUID"] + " "+stulist[a]["PASSWORD"] + "登录失败")
             desp_md += "\n|" + stulist[a][
-                "STUID"] + "|" + "失败" + "|" + "登录失败，账号密码已经输出，请到Github Actions执行界面查看" + "|" + "|"
-            desp_text += stulist[a]["STUID"] + "登录失败，账号密码已经输出，请到Github Actions执行界面查看\n\n"
+                "STUID"] + "|" + "失败" + "|" + "登录失败，账号密码已经输出" + "|" + "|"
+            desp_text += stulist[a]["STUID"] + "登录失败，账号密码已经输出\n\n"
+            if stulist[a]["STUID"] not in retry:
+                retry.append(stulist[a]["STUID"])
+                print("准备重试账号:"+stulist[a]["STUID"])
+                a-=1
+
             continue
         headers["Cookie"]+=q.headers["Set-Cookie"].split(";")[9].split(" ")[1]+";"#添加Cookie：CASTGC
         p=req.get("https://wvpn.hrbeu.edu.cn/users/sign_in")#获取_webvpn_key和webvpn_username，_astraeus_session
@@ -79,6 +84,7 @@ while a <len(stu)-1:
             desp_text+=stulist[a]["STUID"]+"获取webvpn账密失败\n\n"
             if stulist[a]["STUID"] not in retry:
                 retry.append(stulist[a]["STUID"])
+                print("准备重试账号:" + stulist[a]["STUID"])
                 a-=1
             continue
         headers["Cookie"]+=p.request.headers["Cookie"]
@@ -100,6 +106,7 @@ while a <len(stu)-1:
             print("表单创建失败"+str(info))
             if stulist[a]["STUID"] not in retry:
                 retry.append(stulist[a]["STUID"])
+                print("准备重试账号:" + stulist[a]["STUID"])
                 a -= 1
             continue
         formhtml=req.get(formAddress,proxies=proxies,verify=False).text#打开表单
@@ -258,6 +265,7 @@ while a <len(stu)-1:
         desp_text+=stulist[a]["STUID"]+"报备失败，有可能是程序出错了："+str(e)+"\n\n"
         if stulist[a]["STUID"] not in retry:
             retry.append(stulist[a]["STUID"])
+            print("准备重试账号:" + stulist[a]["STUID"])
             a-=1
         pass
 if SCKEY != '':#server酱推送
