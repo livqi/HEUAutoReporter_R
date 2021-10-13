@@ -2,8 +2,8 @@ import requests,re,json,datetime,os,random
 from lxml import etree
 desp_text=""
 proxies={
-        "http":"http://127.0.0.1:8888",
-        "https":"https://127.0.0.1:8888"
+        "http":None,
+        "https":None
     }
 stulist= {}
 retry=[]
