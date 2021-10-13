@@ -1,6 +1,6 @@
 # HEUAutoReporter_R
 
-## 哈尔滨工程大学自动报备出校_Reaests
+## 哈尔滨工程大学自动报备出校_Requests
 
 本项目利用Github Actions在每日6点和12点自动报备出校，并通过**Server酱**推送报备结果。支持多账户报备。
 
@@ -17,7 +17,9 @@
 3. 添加secrets
 4. 启动Github Actions
 5. 手动执行一次Actions（给fork后的项目点击star，如果没有运行，就先unstar然后再star）
+## 异常处理
 
+如果程序出现异常，那就会出现异常。
 ## Secrets
 
 | SECRET_NAME | VALUE                                     |
