@@ -196,7 +196,7 @@ while a <len(stu)-1:
                "fieldBByc2":"",
                "fieldBByc3":"",
                "fieldLYyc1":int(str(fieldLYyc1)[:10]),#当前时间
-               "fieldBBcxsy":"世家那么大，我想出校去看看",#出校目的
+               "fieldBBcxsy":"世界那么大，我想出校去看看",#出校目的
                "fieldBBsylb":"7",#出校原因1：因公出校  2：病假  3：事假  4：求职  5：实习  6：返家  7：其他
                "fieldBBycsj":"",
                "fieldBBcxrqFrom":int(str(fieldBBcxrqFrom).split(".")[0]),#授权开始日期
