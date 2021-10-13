@@ -34,7 +34,6 @@ while a <len(stu)-1:
         danyinghao="\\"
 
         shit="{"+danyinghao+"_parent"+danyinghao+":"+danyinghao+"230000"+danyinghao+"}"
-        print(shit)
         requests.packages.urllib3.disable_warnings()
         headers={
             "Host": "cas-443.wvpn.hrbeu.edu.cn",
@@ -130,7 +129,6 @@ while a <len(stu)-1:
         idontknowwhatsthis=p["data"]
         userId=p["userId"]
         #我也不知道这是啥东西，反正就是返回了好长一坨信息，还把我的自动缩进卡死了...不过这些信息下面正好可以用到。
-        print(idontknowwhatsthis)
         fieldLYyc1=datetime.datetime.now().timestamp()#获取现在的时间
         fieldBBcxrqFrom=datetime.datetime.strptime(str(datetime.date.today()),"%Y-%m-%d").timestamp()#获取今天0点的时间
         fieldBBcxrqTo=fieldBBcxrqFrom
@@ -198,7 +196,7 @@ while a <len(stu)-1:
                "fieldBByc2":"",
                "fieldBByc3":"",
                "fieldLYyc1":int(str(fieldLYyc1)[:10]),#当前时间
-               "fieldBBcxsy":"出校",#出校目的
+               "fieldBBcxsy":"世家那么大，我想出校去看看",#出校目的
                "fieldBBsylb":"7",#出校原因1：因公出校  2：病假  3：事假  4：求职  5：实习  6：返家  7：其他
                "fieldBBycsj":"",
                "fieldBBcxrqFrom":int(str(fieldBBcxrqFrom).split(".")[0]),#授权开始日期
@@ -213,7 +211,7 @@ while a <len(stu)-1:
                "fieldBBdiqu":"230103",#区邮编 Shit...为啥要分别提交三个邮编
                "fieldBBdiqu_Name":"南岗区",
                "fieldBBdiqu_Attr":str(shit),
-               "fieldBBxxdz":"南通大街",#详细地址
+               "fieldBBxxdz":"南通大街145号",#详细地址
                "fieldLYyc":"",
                "fieldJLly":"",
                "fieldLYbgl":"false",
@@ -281,10 +279,11 @@ while a <len(stu)-1:
         result=json.loads(results.text)
         print(result)
         #"userId":""
-        if result["errno"]!=6:
-            result = req.post("https://one.wvpn.hrbeu.edu.cn/infoplus/interface/doAction", data=body, proxies=proxies,
+        if result["errno"]==0:
+            results = req.post("https://one.wvpn.hrbeu.edu.cn/infoplus/interface/doAction", data=body, proxies=proxies,
                                verify=False)#正式提交表单
-            print(result.text)
+            result=json.loads(results.text)
+            print(result)
             if result["errno"]==0:
                 # 报备成功
                 desp_md += "\n|" + stulist[a]["STUID"] + "|" + "成功" + "|报备时间：" + datetime.datetime.fromtimestamp(fieldLYyc1 + 120).strftime("%Y-%m-%d %H:%M:%S") +"  到  "+ \
@@ -300,7 +299,6 @@ while a <len(stu)-1:
                 desp_md += "\n|" + stulist[a]["STUID"] + "|" + "失败" + "|" + str(result) + "|" + formAddress + "|"
                 desp_text += stulist[a]["STUID"] + "报备失败，返回结果为" + str(result) + "表单地址：" + formAddress + "\n\n"
                 pass
-
         else :
             #报备失败
             desp_md+="\n|"+stulist[a]["STUID"]+"|"+"失败"+"|"+str(result)+"|"+formAddress+"|"
