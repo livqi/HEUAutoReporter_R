@@ -304,7 +304,7 @@ while a <len(stu)-1:
             desp_md+="\n|"+stulist[a]["STUID"]+"|"+"失败"+"|"+str(result)+"|"+formAddress+"|"
             desp_text+=stulist[a]["STUID"]+"报备失败，返回结果为"+str(result)+"表单地址："+formAddress+"\n\n"
             pass
-    except TypeError as e:
+    except Exception as e:
         print(stulist[a]["STUID"]+"报备失败，程序可能出错了："+str(e))
         desp_md+="\n|"+stulist[a]["STUID"]+"|"+"失败"+"|"+str(e)+"|"+"|"
         desp_text+=stulist[a]["STUID"]+"报备失败，有可能是程序出错了："+str(e)+"\n\n"
