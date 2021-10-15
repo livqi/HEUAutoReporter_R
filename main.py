@@ -277,13 +277,13 @@ while a <len(stu)-1:
         body["remark"]=""
         body["rand"] = str(random.random() * 10e3)[:3] + "." + str(random.random() * 10e14)[:14]
         result=json.loads(results.text)
-        #print(result)
+        print(result)
         #"userId":""
         if result["errno"]==0:
             results = req.post("https://one.wvpn.hrbeu.edu.cn/infoplus/interface/doAction", data=body, proxies=proxies,
                                verify=False)#正式提交表单
             result=json.loads(results.text)
-            #print(result)
+            print(result)
             if result["errno"]==0:
                 # 报备成功
                 desp_md += "\n|" + stulist[a]["STUID"] + "|" + "成功" + "|报备时间：" + datetime.datetime.fromtimestamp(fieldLYyc1 + 120).strftime("%Y-%m-%d %H:%M:%S") +"  到  "+ \
